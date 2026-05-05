@@ -1,0 +1,134 @@
+.admin-notices-container {
+  display: flex;
+  background-color: #F0F4F8;
+}
+
+.notices-admin-content {
+  display: flex;
+  gap: 30px;
+}
+
+.compose-notice-card { flex: 1.5; }
+.manage-notices-section { flex: 1; }
+
+.admin-n-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.n-row {
+  display: flex;
+  gap: 20px;
+}
+
+.admin-n-form textarea {
+  height: 200px;
+  resize: none;
+}
+
+.n-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-top: 12px;
+}
+
+.btn-broadcast {
+  margin-left: auto;
+  padding: 14px 32px;
+  background: var(--primary-color);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Manage List */
+.admin-n-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.admin-n-item {
+  padding: 20px;
+}
+
+.n-item-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.n-tag-admin {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 4px;
+}
+
+.n-tag-admin.urgent { background: #FEF2F2; color: #DC2626; }
+.n-tag-admin.policy { background: #E0F2FE; color: #0369A1; }
+.n-tag-admin.general { background: #F1F5F9; color: #64748B; }
+
+.n-item-actions { display: flex; gap: 8px; }
+.btn-n-icon { background: transparent; color: #94A3B8; padding: 4px; }
+.btn-n-icon.delete:hover { color: #DC2626; }
+
+.admin-n-item h4 {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.n-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.m-block { display: flex; align-items: center; gap: 6px; }
+
+.pinned-notice {
+  border-left: 4px solid var(--primary-color);
+  background: #F0F9FF;
+}
+
+.n-tags {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pinned-tag {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--primary-color);
+  background: #E0F2FE;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.n-excerpt {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.target-info {
+  margin-left: auto;
+  font-size: 10px;
+  background: #F1F5F9;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #64748B;
+  font-weight: 700;
+}

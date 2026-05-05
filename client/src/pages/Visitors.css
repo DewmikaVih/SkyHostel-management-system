@@ -1,0 +1,251 @@
+.visitors-container {
+  display: flex;
+}
+
+.visitors-main {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  padding: 40px;
+  min-height: 100vh;
+}
+
+.visitors-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.visitors-header p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 40px;
+}
+
+.visitors-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.request-card .hint {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.v-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.v-row {
+  display: flex;
+  gap: 20px;
+}
+
+.v-row .input-group {
+  flex: 1;
+}
+
+.v-form textarea {
+  height: 90px;
+  resize: none;
+}
+
+.btn-primary-v {
+  align-self: flex-end;
+  padding: 14px 40px;
+  background: var(--primary-color);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-guidelines {
+  padding: 8px 16px;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Active Passes */
+.active-passes-section .sec-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.active-passes-section .count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.pass-grid {
+  display: flex;
+  gap: 20px;
+}
+
+.pass-card {
+  flex: 1;
+  max-width: 350px;
+}
+
+.p-id {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  margin-right: 8px;
+}
+
+.p-tag {
+  font-size: 10px;
+  font-weight: 800;
+  background: #DCFCE7;
+  color: #166534;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.p-tag-gray {
+  font-size: 10px;
+  font-weight: 800;
+  background: #F1F5F9;
+  color: #64748B;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.pass-card h4 {
+  font-size: 18px;
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
+.p-rel {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.p-times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.p-time span {
+  display: block;
+  font-size: 10px;
+  color: var(--text-secondary);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.p-time strong {
+  font-size: 13px;
+}
+
+.p-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-download {
+  background: transparent;
+  color: var(--primary-color);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* History Table */
+.v-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.v-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.v-table td {
+  padding: 16px 0;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.v-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.v-user .avatar {
+  width: 32px;
+  height: 32px;
+  background: #F1F5F9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.v-datetime strong {
+  display: block;
+  font-size: 13px;
+}
+
+.v-datetime span {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.v-purpose {
+  max-width: 250px;
+  color: var(--text-secondary);
+}
+
+.v-status {
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.v-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.v-pend { color: var(--warning-color); }
+.v-pend::before { background: var(--warning-color); }
+
+.v-rej { color: var(--error-color); }
+.v-rej::before { background: var(--error-color); }
+
+.btn-cancel:hover {
+  color: var(--error-color) !important;
+  cursor: pointer;
+}
