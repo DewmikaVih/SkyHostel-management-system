@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Hash, Phone, Lock, Layout, Briefcase } from 'lucide-react';
+import { User, Mail, Hash, Phone, Lock, Building2, Briefcase } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import './Register.css';
 
@@ -41,10 +41,11 @@ const RegisterAdmin = () => {
     <div className="register-container">
       <div className="register-visual admin-bg animate-fade-in">
         <div className="visual-overlay">
-          <div className="logo-section">
+          <div className="logo-section animate-slide-up">
+            <Building2 className="logo-icon" size={40} />
             <h1>SkyHostel</h1>
           </div>
-          <div className="visual-text">
+          <div className="visual-text animate-slide-up delay-1">
             <h2>Smart Hostel Administration</h2>
             <p>Digitizing the transition from manual ledger entries to an automated, high-efficiency ecosystem</p>
           </div>

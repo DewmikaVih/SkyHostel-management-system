@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import RegisterStudent from './pages/RegisterStudent';
 import RegisterAdmin from './pages/RegisterAdmin';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import StudentDashboard from './pages/StudentDashboard';
 import StudentProfile from './pages/StudentProfile';
 import AllocationHub from './pages/AllocationHub';
@@ -28,6 +30,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterStudent />} />
         <Route path="/register-admin" element={<RegisterAdmin />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         
         {/* Student Routes */}
         <Route path="/dashboard" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />

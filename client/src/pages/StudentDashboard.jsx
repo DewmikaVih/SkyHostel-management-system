@@ -285,7 +285,7 @@ const StudentDashboard = () => {
                     className={`btn-mark-out ${new Date().getHours() >= 0 && new Date().getHours() < 3 ? 'disabled' : ''}`}
                     onClick={() => {
                       if (new Date().getHours() >= 0 && new Date().getHours() < 3) {
-                        return; // Do nothing
+                        return; // Feature disabled for residents already inside
                       }
                       handleAttendance('OUT');
                     }}
@@ -294,7 +294,7 @@ const StudentDashboard = () => {
                     <LogOut size={18} /> Mark OUT
                   </button>
                   {new Date().getHours() >= 0 && new Date().getHours() < 3 && (
-                    <p className="restriction-msg">If agent, Please contact your warden</p>
+                    <p className="restriction-msg">Curfew active. Mark Out is disabled until 03:00 AM.</p>
                   )}
                 </>
               )}

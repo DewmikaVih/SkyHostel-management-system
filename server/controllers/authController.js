@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
 
 // Helper to generate JWT
 const generateToken = (id) => {
@@ -178,6 +180,136 @@ exports.searchStudents = async (req, res) => {
       ]
     }).select('fullName regNumber _id').limit(10);
     res.json(students);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Forgot Password - Send OTP
+// @route   POST /api/auth/forgot-password
+exports.forgotPassword = async (req, res) => {
+  const { identifier, role } = req.body;
+
+  try {
+    const user = await User.findOne({
+      $or: [{ email: identifier }, { regNumber: identifier }, { staffId: identifier }],
+      role: role
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found with those details' });
+    }
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.resetOtp = otp;
+    user.resetOtpExpire = Date.now() + 10 * 60 * 1000; // 10 mins
+    await user.save();
+
+    // Send Email
+    const message = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: #003B46;">SkyHostel Password Reset</h2>
+        <p>You requested a password reset for your account. Please use the following One-Time Password (OTP) to verify your identity:</p>
+        <div style="background: #f4f4f4; padding: 20px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #003B46;">
+          ${otp}
+        </div>
+        <p style="color: #666; font-size: 14px;">This code will expire in 10 minutes. If you did not request this, please ignore this email.</p>
+      </div>
+    `;
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: 'SkyHostel Password Reset OTP',
+        message
+      });
+
+      res.json({ message: 'OTP sent to registered email' });
+    } catch (err) {
+      user.resetOtp = undefined;
+      user.resetOtpExpire = undefined;
+      await user.save();
+      return res.status(500).json({ message: 'Email could not be sent' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Verify OTP - Generate Reset Link
+// @route   POST /api/auth/verify-otp
+exports.verifyOtp = async (req, res) => {
+  const { identifier, otp, role } = req.body;
+
+  try {
+    const user = await User.findOne({
+      $or: [{ email: identifier }, { regNumber: identifier }, { staffId: identifier }],
+      role: role,
+      resetOtp: otp,
+      resetOtpExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired OTP' });
+    }
+
+    // Generate Reset Token
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    user.resetToken = resetToken;
+    user.resetTokenExpire = Date.now() + 30 * 60 * 1000; // 30 mins
+    user.resetOtp = undefined;
+    user.resetOtpExpire = undefined;
+    await user.save();
+
+    // Send Verification Email with Link
+    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    const message = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: #003B46;">Identity Verified</h2>
+        <p>Your OTP has been verified successfully. Click the button below to set a new password for your SkyHostel account.</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetUrl}" style="background: #003B46; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
+        </div>
+        <p style="color: #666; font-size: 14px;">The link is valid for 30 minutes. If you did not request this, please contact support.</p>
+      </div>
+    `;
+
+    await sendEmail({
+      email: user.email,
+      subject: 'SkyHostel Password Reset Link',
+      message
+    });
+
+    res.json({ message: 'Identity verified. Reset link sent to your email.' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Reset Password
+// @route   POST /api/auth/reset-password
+exports.resetPassword = async (req, res) => {
+  const { token, password } = req.body;
+
+  try {
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired reset token' });
+    }
+
+    // Set new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    user.resetToken = undefined;
+    user.resetTokenExpire = undefined;
+    await user.save();
+
+    res.json({ message: 'Password reset successful. You can now login.' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

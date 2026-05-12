@@ -186,17 +186,19 @@ const AdminDashboard = () => {
               </thead>
               <tbody>
                 {filteredEvents.length > 0 ? filteredEvents.map(event => (
-                  <tr key={event.id || event._id} className={event.type === 'VIOLATION' ? 'row-warning animate-fade-in' : 'animate-fade-in'}>
+                  <tr key={event.id || event._id} className="animate-fade-in">
                     <td className="reg-col">{event.regNumber || 'N/A'}</td>
                     <td className="name-col">{event.studentName}</td>
                     <td>
-                      <span className={`status-tag ${event.type}`}>
-                        {event.type}
+                      <span className={`status-tag-custom ${event.color || 'green'}`}>
+                        {event.statusLabel || (event.type === 'IN' ? 'ComeBack' : 'GoOut')}
                       </span>
                     </td>
-                    <td className="time-col">{new Date(event.time).toLocaleTimeString()}</td>
-                    <td className={`note-col ${event.note?.includes('Late Entry') ? 'late-note' : ''}`}>
-                      {event.note || '-'}
+                    <td className="time-col">{new Date(event.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                    <td className={`note-col-custom ${event.color || 'green'}`}>
+                      {event.statusLabel === 'LateEntry' ? 'Late Return (Violated)' : 
+                       event.statusLabel === 'Not Come' ? 'Did not return (Warning)' :
+                       'On Time'}
                     </td>
                   </tr>
                 )) : (

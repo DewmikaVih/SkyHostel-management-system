@@ -34,7 +34,13 @@ const userSchema = new mongoose.Schema({
   
   // Admin specific fields
   staffId: { type: String, unique: true, sparse: true },
-  adminType: { type: String, enum: ['WARDEN', 'CANTEEN', 'MAINTENANCE', 'SUPER'], default: 'WARDEN' }
+  adminType: { type: String, enum: ['WARDEN', 'CANTEEN', 'MAINTENANCE', 'SUPER'], default: 'WARDEN' },
+
+  // Password Reset fields
+  resetOtp: { type: String },
+  resetOtpExpire: { type: Date },
+  resetToken: { type: String },
+  resetTokenExpire: { type: Date }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

@@ -128,6 +128,9 @@ const AdminNotices = () => {
                     <option value="Computing">Computing</option>
                     <option value="Business">Business</option>
                     <option value="Science">Science</option>
+                    <option value="Humanities">Humanities</option>
+                    <option value="Medicine">Medicine</option>
+                    <option value="Management">Management</option>
                   </select>
                 </div>
               </div>

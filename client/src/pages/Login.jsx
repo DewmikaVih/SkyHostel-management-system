@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Lock, Eye, EyeOff, Layout, ShieldCheck } from 'lucide-react';
+import { User, Lock, Eye, EyeOff, Building2, ShieldCheck } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import './Login.css';
 
@@ -37,13 +37,13 @@ const Login = () => {
       {/* Left Section: Branding & Info */}
       <div className="login-visual animate-fade-in">
         <div className="visual-content">
-          <div className="logo-section">
-            <Layout className="logo-icon" size={32} />
+          <div className="logo-section animate-slide-up">
+            <Building2 className="logo-icon" size={40} />
             <h1>SkyHostel</h1>
           </div>
-          <p className="subtitle">Transforming university accommodation into a streamlined, automated ecosystem</p>
+          <p className="subtitle animate-slide-up delay-1">Transforming university accommodation into a streamlined, automated ecosystem</p>
 
-          <div className="feature-cards">
+          <div className="feature-cards animate-slide-up delay-2">
             <div className="f-card hover-lift">
               <ShieldCheck size={20} className="f-icon" />
               <div>
@@ -110,7 +110,7 @@ const Login = () => {
             <div className="input-group">
               <div className="label-flex">
                 <label>Password</label>
-                <a href="#" className="forgot-pass">Reset Access</a>
+                <a href="/forgot-password" style={{ fontSize: '12px', color: '#003B46', fontWeight: '600', textDecoration: 'none' }}>Reset Access</a>
               </div>
               <div className="input-wrapper">
                 <Lock className="input-icon" size={18} />
@@ -147,13 +147,13 @@ const Login = () => {
               Don't have an account? <a href={role === 'STUDENT' ? '/register' : '/register-admin'}>Create an account</a>
             </p>
 
-            <p className="contact-desk">
+            {/* <p className="contact-desk">
               Having trouble signing in? <a href="#">Contact Desk</a>
-            </p>
+            </p> */}
           </div>
 
           <div className="copyright">
-            <span>© 2024 HostelMaster Corporate.</span>
+            <span>© 2026 SKYHOSTEL MANAGEMENT SYSTEMS. ALL RIGHTS RESERVED</span>
             <div className="footer-links">
               <a href="#">Help Center</a>
               <a href="#">Privacy</a>

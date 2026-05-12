@@ -41,7 +41,6 @@ const Notices = () => {
               <button className={filter === 'URGENT' ? 'active' : ''} onClick={() => setFilter('URGENT')}>Urgent</button>
               <button className={filter === 'GENERAL' ? 'active' : ''} onClick={() => setFilter('GENERAL')}>General</button>
             </div>
-            <button className="btn-date"><Calendar size={16} /> This Month</button>
           </div>
         </header>
 

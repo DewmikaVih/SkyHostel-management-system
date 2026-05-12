@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Layout, Bed, Wrench, Utensils, Users, Bell, LogOut, CreditCard, X, AlertCircle } from 'lucide-react';
+import { Building2, Bed, Wrench, Utensils, Users, Bell, LogOut, CreditCard, X, AlertCircle, Layout } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import './Sidebar.css';
 
@@ -36,7 +36,7 @@ const Sidebar = ({ role = 'student' }) => {
       <div className="sidebar-header">
         <div className="logo">
           <div className="logo-box">
-            <Layout size={24} color="white" />
+            <Building2 size={24} color="white" />
           </div>
           <div>
             <h3>SkyHostel</h3>

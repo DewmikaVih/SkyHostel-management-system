@@ -81,8 +81,8 @@ exports.markAttendance = async (req, res) => {
     if (!student) return res.status(404).json({ message: 'Student not found' });
 
     const now = new Date();
-    const currentMonth = now.getMonth();
     const io = req.app.get('socketio');
+    const currentMonth = now.getMonth();
 
     // Monthly Reset Logic
     if (student.lastResetMonth !== currentMonth) {
@@ -93,29 +93,41 @@ exports.markAttendance = async (req, res) => {
     if (type === 'OUT') {
       student.status = 'OUT';
       student.lastMarkOut = now;
+      
       if (io) io.emit('attendance_alert', { 
         studentName: student.fullName, 
         regNumber: student.regNumber,
-        type: 'OUT', 
-        time: now,
-        note: "On Time"
+        type: 'OUT',
+        statusLabel: 'GoOut',
+        color: 'green',
+        time: now
       });
     } else {
       // Logic for MARK IN
-      student.status = 'IN_HOSTEL';
+      const outTime = student.lastMarkOut ? new Date(student.lastMarkOut) : null;
+      const isSameDay = outTime && outTime.toDateString() === now.toDateString();
+      const hours = now.getHours();
       
-      // LATE ENTRY LOGIC: If marking IN after 11:59 PM (00:00 - 05:00) 
-      const isAfterMidnight = now.getHours() >= 0 && now.getHours() < 5; 
+      let statusLabel = 'ComeBack';
+      let color = 'green';
       let isLate = false;
 
-      if (isAfterMidnight) {
+      // Rule: Before 11:59 PM (on the same day or generally before midnight)
+      if (hours >= 0 && hours < 3) {
+        // Between 12:00 AM and 3:00 AM
+        statusLabel = 'LateEntry';
+        color = 'red';
         isLate = true;
-      } else if (student.lastMarkOut) {
-        const outDate = new Date(student.lastMarkOut).toDateString();
-        const inDate = now.toDateString();
-        if (outDate !== inDate) isLate = true;
+      } else if (!isSameDay && outTime) {
+        // If it's a different day and not in the 12-3AM window, it's definitely late or even "Not Come"
+        // But if they are clicking now, they ARE coming back, so we mark it as Late if it's after midnight
+        statusLabel = 'LateEntry';
+        color = 'red';
+        isLate = true;
       }
 
+      student.status = 'IN_HOSTEL';
+      
       if (isLate) {
         student.lateEntries += 1;
         student.monthlyLateEntries += 1;
@@ -127,34 +139,26 @@ exports.markAttendance = async (req, res) => {
             student: student._id,
             admin: systemAdmin ? systemAdmin._id : student._id,
             amount: 250,
-            reason: 'Threshold Exceeded: 7 Late Entries in a single month',
+            reason: '7 Late Entries in a single month',
             status: 'UNPAID'
           });
           student.penaltyBalance = (student.penaltyBalance || 0) + 250;
         }
-
-        if (io) io.emit('curfew_violation', { 
-          studentName: student.fullName, 
-          regNumber: student.regNumber, 
-          time: now, 
-          entries: student.monthlyLateEntries,
-          note: "Late Entry"
-        });
       }
-      
-      const note = isLate ? "Late Entry" : "On Time";
+
       if (io) io.emit('attendance_alert', { 
         studentName: student.fullName, 
         regNumber: student.regNumber, 
-        type: 'IN', 
-        time: now,
-        note: note
+        type: 'IN',
+        statusLabel: statusLabel,
+        color: color,
+        time: now
       });
     }
 
     await student.save();
     res.json({ 
-      message: `Marked as ${student.status}`, 
+      message: `Successfully marked as ${type}`, 
       status: student.status, 
       lateEntries: student.lateEntries,
       monthlyLateEntries: student.monthlyLateEntries
@@ -195,13 +199,42 @@ exports.getRecentAttendance = async (req, res) => {
   try {
     const students = await User.find({ status: { $exists: true } })
       .sort({ updatedAt: -1 })
-      .limit(20)
-      .select('fullName regNumber status updatedAt');
+      .limit(50)
+      .select('fullName regNumber status updatedAt lastMarkOut');
     
+    const now = new Date();
     const movements = students.map(s => {
-      const moveTime = new Date(s.updatedAt);
-      const hours = moveTime.getHours();
-      const isLateTime = hours >= 0 && hours < 5;
+      const lastMove = new Date(s.updatedAt);
+      const markOutTime = s.lastMarkOut ? new Date(s.lastMarkOut) : null;
+      
+      let statusLabel = s.status === 'IN_HOSTEL' ? 'ComeBack' : 'GoOut';
+      let color = 'green';
+
+      if (s.status === 'IN_HOSTEL') {
+        // If they marked IN, check if it was late
+        const moveHours = lastMove.getHours();
+        const markOutDay = markOutTime ? markOutTime.toDateString() : null;
+        const markInDay = lastMove.toDateString();
+        
+        if (moveHours >= 0 && moveHours < 3) {
+          statusLabel = 'LateEntry';
+          color = 'red';
+        } else if (markOutDay && markOutDay !== markInDay) {
+          statusLabel = 'LateEntry';
+          color = 'red';
+        }
+      } else if (s.status === 'OUT') {
+        // If they are currently OUT, check if they are now "Not Come"
+        // Condition: Current time is after 3:00 AM and it's not the same day they went out
+        if (now.getHours() >= 3) {
+          const today = now.toDateString();
+          const outDay = markOutTime ? markOutTime.toDateString() : null;
+          if (outDay && outDay !== today) {
+            statusLabel = 'Not Come';
+            color = 'orange'; // Warning color
+          }
+        }
+      }
       
       return {
         id: s._id,
@@ -209,7 +242,8 @@ exports.getRecentAttendance = async (req, res) => {
         regNumber: s.regNumber,
         type: s.status === 'IN_HOSTEL' ? 'IN' : 'OUT',
         time: s.updatedAt,
-        note: (s.status === 'IN_HOSTEL' && isLateTime) ? "Late Entry" : "On Time"
+        statusLabel: statusLabel,
+        color: color
       };
     });
 

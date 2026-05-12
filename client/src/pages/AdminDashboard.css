@@ -132,6 +132,24 @@
   color: var(--primary-color);
   background: transparent;
 }
+.status-tag-custom {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.status-tag-custom.green { background: #DCFCE7; color: #166534; }
+.status-tag-custom.red { background: #FEE2E2; color: #991B1B; }
+.status-tag-custom.orange { background: #FFEDD5; color: #9A3412; }
+
+.note-col-custom {
+  font-size: 12px;
+  font-weight: 600;
+}
+.note-col-custom.green { color: #166534; }
+.note-col-custom.red { color: #991B1B; }
+.note-col-custom.orange { color: #9A3412; }
 
 .card.full-width {
   flex: 1;
